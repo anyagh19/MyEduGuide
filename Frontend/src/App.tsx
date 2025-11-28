@@ -9,6 +9,7 @@ import SignUpForm from "./modules/auth/SignUpForm"
 import NotFound from "./pages/NotFound"
 import User from "./pages/User"
 import ProtectedRoutes from "./components/ProtectedRoutes"
+import Profile from "./modules/user/Profile"
 
 
 function App() {
@@ -30,10 +31,12 @@ function App() {
       <Route path="/signup" element={<SignUpForm />} />
       <Route path="*" element={<NotFound />} />
       <Route path="/user" 
-      element={
-      <ProtectedRoutes>
+      element={<ProtectedRoutes>
         <User />
-      </ProtectedRoutes>} />
+        </ProtectedRoutes>} >
+         <Route path="profile" element={<Profile />} />
+  
+        </Route>
 
     </Routes>
     {/* </BrowserRouter> */}

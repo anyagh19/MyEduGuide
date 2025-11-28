@@ -53,7 +53,7 @@ function ProtectedRoutes({children}: {children : React.ReactNode}){
         return <div>Loading....</div>
     }
 
-    return isAuth ? children : <Navigate to={'/login'} />
+    return isAuth ? children : <Navigate to={'/signin'} />
 }
 
 export default ProtectedRoutes;
