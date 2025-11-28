@@ -1,0 +1,13 @@
+// import React from 'react'
+
+import SignInForm from "../modules/auth/SignInForm"
+
+function Login() {
+  return (
+    <div>
+        <SignInForm />
+    </div>
+  )
+}
+
+export default Login
