@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import UserProfile
+from .models import UserProfile , UserProgress
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,3 +26,20 @@ class UserProfileSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         validated_data.pop("user", None)  # prevent user overwrite
         return super().update(instance, validated_data)
+
+class UserProgressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProgress
+        fields = "__all__"
+        read_only_fields = ["user"]
+
+    def create(self, validated_data):
+        user = self.context["request"].user
+
+        # Ensure default score fields
+        validated_data.setdefault("score", 0)
+        validated_data.setdefault("total", 0)
+        validated_data.setdefault("percentage", 0.0)
+
+        validated_data["user"] = user
+        return super().create(validated_data)

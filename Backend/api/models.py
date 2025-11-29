@@ -89,3 +89,22 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
+
+class UserProgress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="progress")
+    
+    studied = models.TextField(null=True, blank=True)  # What user studied
+    
+    score = models.IntegerField(null=True, blank=True , default=0)  # e.g., 8
+    total = models.IntegerField(null=True, blank=True , default=0)  # e.g., 10
+    percentage = models.FloatField(null=True, blank=True)
+    
+    date = models.DateField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if self.score is not None and self.total not in [None, 0]:
+            self.percentage = (self.score / self.total) * 100
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.user.username}'s Progress"

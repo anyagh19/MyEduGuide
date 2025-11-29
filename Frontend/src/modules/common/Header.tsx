@@ -5,8 +5,8 @@ function Header() {
     <header className="flex items-center justify-between w-full px-8 py-4 shadow-sm bg-white">
       
       {/* Logo */}
-      <div className="text-xl font-semibold">
-        Logo
+      <div className=" text-violet-600 font-medium text-2xl">
+        EduMentor
       </div>
 
       {/* Nav Links */}

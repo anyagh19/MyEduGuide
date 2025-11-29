@@ -10,6 +10,9 @@ import NotFound from "./pages/NotFound"
 import User from "./pages/User"
 import ProtectedRoutes from "./components/ProtectedRoutes"
 import Profile from "./modules/user/Profile"
+import AIGuide from "./modules/user/AIGuide"
+import Progress from "./modules/user/Progress"
+import Quiz from "./modules/user/Quiz"
 
 
 function App() {
@@ -35,6 +38,9 @@ function App() {
         <User />
         </ProtectedRoutes>} >
          <Route path="profile" element={<Profile />} />
+         <Route path="guide" element={<AIGuide />} />
+         <Route path="progress" element={<Progress /> } />
+         <Route path="quiz" element={<Quiz /> } />
   
         </Route>
 

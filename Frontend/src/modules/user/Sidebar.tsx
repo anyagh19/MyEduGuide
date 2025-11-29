@@ -7,7 +7,7 @@ export default function Sidebar() {
       
       {/* App Name */}
       <h1 className="text-3xl font-bold text-blue-600 mb-10">
-        MyEduGuide
+        Edumentor
       </h1>
 
       {/* Menu Items */}
@@ -20,20 +20,26 @@ export default function Sidebar() {
         </div>
         </Link>
 
+        <Link to={'/user/guide'}>
         <div className="flex items-center gap-3 hover:text-blue-600 cursor-pointer text-lg">
           <Brain size={22} />
           <span>AI Guide</span>
         </div>
+        </Link>
 
+       <Link to={'/user/progress'}>
         <div className="flex items-center gap-3 hover:text-blue-600 cursor-pointer text-lg">
           <BarChart size={22} />
           <span>Progress</span>
         </div>
+       </Link>
 
+        <Link to={'/user/quiz'}>
         <div className="flex items-center gap-3 hover:text-blue-600 cursor-pointer text-lg">
           <BookOpen size={22} />
           <span>Quizzes</span>
         </div>
+        </Link>
 
       </nav>
     </div>
