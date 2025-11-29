@@ -13,6 +13,7 @@ import Profile from "./modules/user/Profile"
 import AIGuide from "./modules/user/AIGuide"
 import Progress from "./modules/user/Progress"
 import Quiz from "./modules/user/Quiz"
+import Report from "./modules/user/Report"
 
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
          <Route path="guide" element={<AIGuide />} />
          <Route path="progress" element={<Progress /> } />
          <Route path="quiz" element={<Quiz /> } />
+         <Route path="report" element={<Report/> } />
   
         </Route>
 

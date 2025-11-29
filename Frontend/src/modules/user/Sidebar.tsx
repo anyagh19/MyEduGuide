@@ -12,6 +12,14 @@ export default function Sidebar() {
 
       {/* Menu Items */}
       <nav className="flex flex-col gap-6 text-gray-700">
+
+        <Link to={'/user/report'}>
+        <div className="flex items-center gap-3 hover:text-blue-600 cursor-pointer text-lg">
+          <BookOpen size={22} />
+          <span>Dashboard</span>
+        </div>
+        </Link>
+
         
         <Link to={'/user/profile'}>
         <div className="flex items-center gap-3 hover:text-blue-600 cursor-pointer text-lg">

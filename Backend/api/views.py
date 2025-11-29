@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
-from rest_framework.views import APIView
+from rest_framework.views import APIView 
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
 from .serializers import UserSerializer, UserProfileSerializer , UserProgressSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import UserProfile , UserProgress
@@ -221,3 +222,84 @@ class UpdateQuizResultView(APIView):
         record.save()
 
         return Response({"message": "Quiz result updated!"})
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def generate_user_report(request):
+    user = request.user
+
+    # 1. Fetch User Profile
+    try:
+        profile = UserProfile.objects.get(user=user)
+    except UserProfile.DoesNotExist:
+        profile = None
+
+    # 2. Fetch Progress List
+    progress_entries = UserProgress.objects.filter(user=user).order_by("-date")
+
+    # 3. Build progress text
+    progress_text = "\n".join([
+        f"- Studied: {p.studied} | Score: {p.score}/{p.total} | Percentage: {p.percentage}% | Date: {p.date}"
+        for p in progress_entries
+    ])
+
+    # 4. Quiz percentage list
+    quiz_percentages = [p.percentage for p in progress_entries if p.percentage is not None]
+    avg_percentage = sum(quiz_percentages) / len(quiz_percentages) if quiz_percentages else None
+
+    # 5. Prepare profile summary
+    profile_summary = f"""
+    Gender: {profile.gender}
+    Location: {profile.location}
+    10th Marks: {profile.tenth_marks}
+    12th Marks: {profile.twelfth_marks}
+    Skills: {profile.technical_skills}
+    Interests: {profile.interests}
+    Goals: {profile.short_term_goal}
+    """ if profile else "No profile found."
+
+    # 6. Prepare context for AI
+    user_info = f"""
+Name: {user.username}
+Email: {user.email}
+
+Profile:
+{profile_summary}
+
+Study Progress:
+{progress_text if progress_text else "No study progress recorded yet."}
+
+Quiz Performance:
+Average Percentage: {avg_percentage if avg_percentage else "N/A"}
+"""
+
+    # 7. Generate Report Using OpenAI
+    from openai import OpenAI
+    client = OpenAI(api_key=settings.OPENAI_API_KEY)
+
+    prompt = f"""
+You are an expert academic mentor. Generate a structured study progress report.
+
+USER DATA:
+{user_info}
+
+INCLUDE THESE SECTIONS:
+1. Overview summary
+2. Learning strengths
+3. Weak areas to improve
+4. Quiz analysis
+5. Study consistency analysis
+6. Personalized recommendations
+7. Next action plan
+8. Motivational message for the user
+"""
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.7,
+    )
+
+    report = response.choices[0].message.content
+
+    return Response({"report": report})
