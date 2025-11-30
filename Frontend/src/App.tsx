@@ -14,6 +14,7 @@ import AIGuide from "./modules/user/AIGuide"
 import Progress from "./modules/user/Progress"
 import Quiz from "./modules/user/Quiz"
 import Report from "./modules/user/Report"
+import Admin from "./modules/user/Admin"
 
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
   //   return <Navigate to={'/'} />
   // }
 
-
+// localStorage.clear()
   return (
     <>
     {/* <BrowserRouter> */}
@@ -45,6 +46,7 @@ function App() {
          <Route path="report" element={<Report/> } />
   
         </Route>
+      <Route path="/admin-dashboard" element={<ProtectedRoutes><Admin /></ProtectedRoutes>}/>
 
     </Routes>
     {/* </BrowserRouter> */}

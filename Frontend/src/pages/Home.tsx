@@ -38,7 +38,7 @@ export default function Home() {
           {/* Using a more relevant placeholder image description */}
           
           <img
-            src="https://via.placeholder.com/500x350" // Replace with a custom image later
+            src="https://i.pinimg.com/736x/0f/f8/78/0ff8788f3adab9660c146eeb10332d20.jpg" // Replace with a custom image later
             alt="Dashboard showing study progress and quiz results"
             className="w-full h-auto rounded-3xl shadow-2xl border-4 border-white transition duration-500 transform hover:scale-[1.03] animate-float"
             style={{ 

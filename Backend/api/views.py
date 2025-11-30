@@ -12,6 +12,65 @@ from django.http import JsonResponse
 from django.conf import settings
 from openai import OpenAI
 import json
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+ADMIN_USERNAME='admin'
+ADMIN_PASSWORD='admin19'
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def admin_login(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+
+    if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+
+        # Create test admin user if not exists
+        admin_user, created = User.objects.get_or_create(username="admin")
+        if created:
+            admin_user.set_password("admin19")
+            admin_user.is_staff = True
+            admin_user.is_superuser = True
+            admin_user.save()
+
+        # Generate JWT token
+        refresh = RefreshToken.for_user(admin_user)
+
+        users = User.objects.all().values("id", "username", "email")
+
+        return Response({
+            "admin": True,
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+            "users": list(users)
+        }, status=200)
+
+    return Response({"admin": False, "error": "Invalid admin credentials"}, status=401)
+
+class AdminUserListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        if not request.user.is_staff:
+            return Response({"error": "Not admin"}, status=403)
+
+        users = User.objects.all().values("id", "username", "email", "date_joined")
+        return Response(list(users))
+
+
+class AdminDeleteUser(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        if not request.user.is_staff:
+            return Response({"error": "Not authorized"}, status=403)
+
+        try:
+            user = User.objects.get(id=pk)
+            user.delete()
+            return Response({"message": "User deleted"}, status=200)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=404)
 
 
 class CreateUserView(generics.CreateAPIView):

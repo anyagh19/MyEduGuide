@@ -10,15 +10,27 @@ interface LoginFormInputs {
 
 export default function SignInForm() {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormInputs>();
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: LoginFormInputs) => {
     console.log("Form Data:", data);
-    const res = await api.post('api/token/' , {username: data.username , password: data.password})
+    if (data.username === "admin" && data.password === "admin19") {
+      const res = await api.post('api/admin/login/', { username: data.username, password: data.password })
+      if (res) {
+        localStorage.setItem(ACCESS_TOKEN, res.data.access)
+        localStorage.setItem(REFRESH_TOKEN, res.data.refresh)
+         navigate("/admin-dashboard");
+        window.location.reload()
+      }
+      // No JWT required
+      localStorage.setItem("isAdmin", "true");
+      return;
+    }
+    const res = await api.post('api/token/', { username: data.username, password: data.password })
     console.log(res)
-    if(res){
-      localStorage.setItem(ACCESS_TOKEN , res.data.access)
-      localStorage.setItem(REFRESH_TOKEN , res.data.refresh)
+    if (res) {
+      localStorage.setItem(ACCESS_TOKEN, res.data.access)
+      localStorage.setItem(REFRESH_TOKEN, res.data.refresh)
       navigate('/user')
       window.location.reload()
     }
@@ -26,7 +38,7 @@ export default function SignInForm() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      
+
       <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-8">
 
         {/* Project Name */}
@@ -83,9 +95,9 @@ export default function SignInForm() {
         <p className="text-center text-gray-500 mt-5">
           Don't have an account?
           <Link to={'/signup'}>
-          <span className="text-blue-600 cursor-pointer hover:underline ml-1">
-            Register
-          </span>
+            <span className="text-blue-600 cursor-pointer hover:underline ml-1">
+              Register
+            </span>
           </Link>
         </p>
 

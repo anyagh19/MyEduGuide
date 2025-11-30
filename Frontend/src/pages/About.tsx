@@ -33,7 +33,7 @@ export default function About() {
         <div className="flex justify-center animate-slide-in-right">
           
           <img
-            src="https://via.placeholder.com/450x300"
+            src="https://i.pinimg.com/736x/30/4f/0f/304f0ff617a3e586ef740d84f414a454.jpg"
             alt="MyEduGuide Mission: Adaptive learning and progress tracking"
             className="rounded-3xl shadow-2xl border-4 border-white transition duration-500 transform hover:scale-[1.05]"
           />
